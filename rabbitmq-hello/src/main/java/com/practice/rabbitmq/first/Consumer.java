@@ -31,7 +31,7 @@ public class Consumer {
          * 消費消息
          * 1. 消費哪個隊列(隊列名稱)
          * 2. 消費成功之後是否要自動應答。true: 自動應答，false: 手動應答
-         * 3. 未成功消費的回調
+         * 3. 成功消費的回調
          * 4. 消費者取消消費的回調
          */
         channel.basicConsume(QUEUE_NAME, true, (s, d) -> {
