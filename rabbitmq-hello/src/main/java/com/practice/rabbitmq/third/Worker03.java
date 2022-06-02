@@ -16,7 +16,7 @@ public class Worker03 {
 
     public static void main(String[] args) throws IOException, TimeoutException {
         Channel channel = RabbitMqUtils.getChannel();
-        System.out.println("C2等待接收消息處理時間比較短");
+        System.out.println("C2等待接收消息處理時間比較長");
 
         boolean autoAck = false;
         channel.basicConsume(TASK_QUEUE_NAME, autoAck, (consumerTag, message) -> {
