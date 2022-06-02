@@ -17,8 +17,9 @@ public class Task02 {
     public static void main(String[] args) throws IOException, TimeoutException {
         Channel channel = RabbitMqUtils.getChannel();
 
-        //聲明隊列
-        channel.queueDeclare(TASK_QUEUE_NAME, false, false, false, null);
+        //聲明隊列，持久化
+        boolean durable = true;
+        channel.queueDeclare(TASK_QUEUE_NAME, durable, false, false, null);
 
         //從控制台輸入消息
         Scanner sc = new Scanner(System.in);
