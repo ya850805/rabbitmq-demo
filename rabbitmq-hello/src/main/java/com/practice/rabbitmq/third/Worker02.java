@@ -18,6 +18,10 @@ public class Worker02 {
         Channel channel = RabbitMqUtils.getChannel();
         System.out.println("C1等待接收消息處理時間比較短");
 
+        //設置不公平分發
+        int prefetchCount = 1;
+        channel.basicQos(prefetchCount);
+
         boolean autoAck = false;
         channel.basicConsume(TASK_QUEUE_NAME, autoAck, (consumerTag, message) -> {
             //沈睡1秒，模擬處理時間
