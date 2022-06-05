@@ -19,7 +19,10 @@ public class Worker02 {
         System.out.println("C1等待接收消息處理時間比較短");
 
         //設置不公平分發
-        int prefetchCount = 1;
+//        int prefetchCount = 1;
+
+        //欲取值為2
+        int prefetchCount = 2;
         channel.basicQos(prefetchCount);
 
         boolean autoAck = false;
