@@ -21,9 +21,11 @@ public class ConfirmMessage {
 
     public static void main(String[] args) throws Exception {
         //1. 單個確認
-        publishMessageIndividually(); //發布1000個單獨確認的消息，耗時1739毫秒
+//        publishMessageIndividually(); //發布1000個單獨確認的消息，耗時1739毫秒
 
         //2. 批量確認
+        publishMessageBatch(); //發布1000個批量確認的消息，耗時125毫秒
+
         //3. 異步批量確認
     }
 
@@ -58,5 +60,37 @@ public class ConfirmMessage {
         long end = System.currentTimeMillis();
 
         System.out.println("發布" + MESSAGE_COUNT + "個單獨確認的消息，耗時" + (end - begin) + "毫秒");
+    }
+
+    /**
+     * 批量發布確認
+     * @throws Exception
+     */
+    public static void publishMessageBatch() throws Exception {
+        Channel channel = RabbitMqUtils.getChannel();
+
+        String queueName = UUID.randomUUID().toString();
+        channel.queueDeclare(queueName, true, false, false, null);
+
+        channel.confirmSelect();
+
+        long begin = System.currentTimeMillis();
+
+        //批量確認消息大小
+        int batchSize = 100;
+
+        for (int i = 0; i < MESSAGE_COUNT; i++) {
+            String message = String.valueOf(i);
+            channel.basicPublish("", queueName, null, message.getBytes());
+
+            //判斷達到100條消息時，批量確認一次
+            if((i + 1) % 100 == 0) {
+                channel.waitForConfirms();
+            }
+        }
+
+        long end = System.currentTimeMillis();
+
+        System.out.println("發布" + MESSAGE_COUNT + "個批量確認的消息，耗時" + (end - begin) + "毫秒");
     }
 }
