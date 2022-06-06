@@ -18,6 +18,9 @@ public class Task02 {
     public static void main(String[] args) throws IOException, TimeoutException {
         Channel channel = RabbitMqUtils.getChannel();
 
+        //開啟發布確認
+        channel.confirmSelect();
+
         //聲明隊列，持久化
         boolean durable = true;
         channel.queueDeclare(TASK_QUEUE_NAME, durable, false, false, null);
