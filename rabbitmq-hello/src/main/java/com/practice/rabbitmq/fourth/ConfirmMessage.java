@@ -129,7 +129,7 @@ public class ConfirmMessage {
          * 1. 監聽哪些消息成功了
          * 2. 監聽哪些消息失敗了
          */
-        channel.addConfirmListener(ackCallback, nackCallback);
+        channel.addConfirmListener(ackCallback, nackCallback); //異步通知
 
         long begin = System.currentTimeMillis();
 
