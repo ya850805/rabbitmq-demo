@@ -5,6 +5,9 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConfirmCallback;
 
 import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentNavigableMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * 發布確認模式
@@ -101,10 +104,18 @@ public class ConfirmMessage {
     public static void publishMessageAsync() throws Exception {
         Channel channel = RabbitMqUtils.getChannel();
 
-        channel.confirmSelect();
-
         String queueName = UUID.randomUUID().toString();
         channel.queueDeclare(queueName, true, false, false, null);
+
+        channel.confirmSelect();
+
+        /**
+         * 線程安全有序的Hash表，適用於高併發的情況下
+         * 1. 將序號與消息進行關聯(key-value)
+         * 2. 輕鬆的批量刪除條目，只需要給到序號(key)
+         * 3. 支持高併發(多線程)
+         */
+        ConcurrentSkipListMap<Long, String> outstandingConfirms = new ConcurrentSkipListMap<>();
 
         /**
          * 消息確認成功 回調函數
@@ -112,6 +123,14 @@ public class ConfirmMessage {
          * 2. 是否為批量確認
          */
         ConfirmCallback ackCallback = (deliveryTag, multiple) -> {
+            //(2)刪除掉已確認的消息，剩下的就是未確認的消息
+            if(multiple) {
+                ConcurrentNavigableMap<Long, String> confirmed = outstandingConfirms.headMap(deliveryTag);
+                confirmed.clear();
+            } else {
+                outstandingConfirms.remove(deliveryTag);
+            }
+
             System.out.println("確認的消息：" + deliveryTag);
         };
 
@@ -121,7 +140,8 @@ public class ConfirmMessage {
          * 2. 是否為批量確認
          */
         ConfirmCallback nackCallback = (deliveryTag, multiple) -> {
-            System.out.println("未確認的消息：" + deliveryTag);
+            //(3)打印未確認的消息
+            System.out.println("未確認的消息編號為:" + deliveryTag + "，未確認的消息是：" + outstandingConfirms.get(deliveryTag));
         };
 
         /**
@@ -135,6 +155,10 @@ public class ConfirmMessage {
 
         for (int i = 0; i < MESSAGE_COUNT; i++) {
             String message = String.valueOf(i);
+
+            //(1)紀錄下所有要發送的消息
+            outstandingConfirms.put(channel.getNextPublishSeqNo(), message);
+
             channel.basicPublish("", queueName, null, message.getBytes());
         }
 
