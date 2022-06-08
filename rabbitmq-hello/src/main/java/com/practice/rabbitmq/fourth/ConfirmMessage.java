@@ -29,7 +29,7 @@ public class ConfirmMessage {
 //        publishMessageBatch(); //發布1000個批量確認的消息，耗時125毫秒
 
         //3. 異步批量確認
-        publishMessageAsync(); //發布1000個異步發布的消息，耗時111毫秒
+        publishMessageAsync(); //發布1000個異步發布的消息，耗時106毫秒
     }
 
     /**
