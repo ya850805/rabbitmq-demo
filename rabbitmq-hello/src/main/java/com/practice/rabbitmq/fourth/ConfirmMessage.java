@@ -80,14 +80,14 @@ public class ConfirmMessage {
         long begin = System.currentTimeMillis();
 
         //批量確認消息大小
-        int batchSize = 100;
+        final int batchSize = 100;
 
         for (int i = 0; i < MESSAGE_COUNT; i++) {
             String message = String.valueOf(i);
             channel.basicPublish("", queueName, null, message.getBytes());
 
             //判斷達到100條消息時，批量確認一次
-            if((i + 1) % 100 == 0) {
+            if((i + 1) % batchSize == 0) {
                 channel.waitForConfirms();
             }
         }
