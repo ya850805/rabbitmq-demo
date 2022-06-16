@@ -51,7 +51,6 @@ public class Consumer01 {
         System.out.println("等待接收消息...");
 
         channel.basicConsume(NORMAL_QUEUE, true, (consumerTag, message) -> {
-
             System.out.println("Consumer01接收消息：" + new String(message.getBody(), "UTF-8"));
         }, s -> {
             System.out.println(s + "消費者取消消費接口回調邏輯");
