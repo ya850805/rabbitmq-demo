@@ -11,7 +11,7 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * 死信隊列
- * 消費者1
+ * 消費者1：聲明普通、死信交換機和隊列
  */
 public class Consumer01 {
     //普通交換機名稱
