@@ -50,6 +50,7 @@ public class Consumer01 {
 
         System.out.println("等待接收消息...");
 
+        //消費消息
         channel.basicConsume(NORMAL_QUEUE, true, (consumerTag, message) -> {
             System.out.println("Consumer01接收消息：" + new String(message.getBody(), "UTF-8"));
         }, s -> {
