@@ -21,6 +21,7 @@ public class Producer {
         //延遲消息，設置TTL的時間，單位是ms
         AMQP.BasicProperties properties = new AMQP.BasicProperties().builder().expiration("10000").build();
 
+        //發布消息
         for (int i = 1; i < 11; i++) {
             String message = "info" + i;
             channel.basicPublish(NORMAL_EXCHANGE, "zhangsan", properties, message.getBytes());
