@@ -55,10 +55,11 @@ public class Consumer01RejectMessage {
         channel.basicConsume(NORMAL_QUEUE, false, (consumerTag, message) -> {
             String msg = new String(message.getBody(), "UTF-8");
 
+            //若消息為info5則拒絕
             if("info5".equals(msg)) {
                 System.out.println("Consumer01接收消息：" + msg + "，此消息被C1拒絕");
 
-                //第二個參數代表是否再放回正常隊列
+                //拒絕消息，第二個參數代表是否再放回正常隊列
                 channel.basicReject(message.getEnvelope().getDeliveryTag(), false);
             } else {
                 System.out.println("Consumer01接收消息：" + msg);
