@@ -4,3 +4,6 @@ spring:
     port: 5672
     username: admin
     password: 123
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
