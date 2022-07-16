@@ -37,6 +37,5 @@ public class SendMsgController {
             msg.getMessageProperties().setExpiration(ttlTime);
             return msg;
         });
-
     }
 }
