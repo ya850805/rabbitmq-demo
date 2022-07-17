@@ -46,8 +46,8 @@ public class SendMsgController {
         log.info("當前時間：{}，發送一條時長為{}毫秒信息給延遲隊列delayed.queue：{}", LocalDateTime.now(), delayTime, message);
         rabbitTemplate.convertAndSend(DelayedQueueConfig.DELAYED_EXCHANGE_NAME, DelayedQueueConfig.DELAYED_ROUTING_KEY,
                 message, msg -> {
-                    //發送消息延遲時長，單位ms
-                    msg.getMessageProperties().setDelay(delayTime * 1000);
+                    //發送消息延遲時長
+                    msg.getMessageProperties().setDelay(delayTime);
                     return msg;
                 });
     }
