@@ -43,7 +43,8 @@ public class Producer {
          * 5. 其他參數
          */
         Map<String, Object> arguments = new HashMap<>();
-        arguments.put("x-max-priority", 10); //官方允許是0-255，此處設置10，允許範圍為0-10，不要設置過大會浪費CPU與內存
+        arguments.put("x-max-priority", 10); //設置優先級隊列，官方允許是0-255，此處設置10，允許範圍為0-10，不要設置過大會浪費CPU與內存
+//        arguments.put("x-queue-mode", "lazy"); //設置惰性隊列，消息是保存在磁盤中
         channel.queueDeclare(QUEUE_NAME, true, false, false, arguments);
 
         for (int i = 1; i < 11; i++) {
